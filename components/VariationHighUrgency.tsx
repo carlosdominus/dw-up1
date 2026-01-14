@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { PageData } from '../types';
 import { AlertTriangleIcon, ShieldCheckIcon, CheckIcon } from './Icons';
+import PaytButton from './PaytButton';
 
 interface Props {
   data: PageData;
@@ -54,17 +55,12 @@ const VariationHighUrgency: React.FC<Props> = ({ data }) => {
                 <div className="flex justify-center items-center gap-1">
                     <span className="text-3xl font-black mt-2 text-zinc-400">R$</span>
                     <span className="text-8xl md:text-9xl font-black tracking-tighter leading-none text-zinc-900">
-                      {data.newPrice.replace('R$', '')}
+                      {data.newPrice.replace('R$', '').trim()}
                     </span>
                 </div>
             </div>
 
-            <a 
-              href={data.checkoutUrl}
-              className="block w-full bg-green-600 hover:bg-green-700 text-white py-6 rounded-3xl text-xl md:text-2xl font-black uppercase tracking-tight transition-all active:scale-95 shadow-[0_10px_30px_rgba(22,163,74,0.3)] animate-pulse-custom leading-tight"
-            >
-              QUERO ACESSO À<br/>RECEITA AGORA
-            </a>
+            <PaytButton />
           </div>
           
           <div className="bg-zinc-50 py-4 px-6 border-t border-zinc-100">

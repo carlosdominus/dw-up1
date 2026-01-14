@@ -1,19 +1,36 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const PaytButton: React.FC = () => {
-  const handleClick = () => {
-    // Sinaliza que o usuário está saindo via botão de compra
-    (window as any).isPaytRedirect = true;
-  };
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const el = linkRef.current;
+    if (!el) return;
+
+    // Usamos um listener nativo para garantir que a flag seja setada 
+    // antes que o script da PayT dispare o redirecionamento
+    const handleCapture = () => {
+      (window as any).isPaytRedirect = true;
+      console.log("Checkout autorizado, ignorando back redirect");
+    };
+
+    el.addEventListener('mousedown', handleCapture);
+    el.addEventListener('touchstart', handleCapture);
+    
+    return () => {
+      el.removeEventListener('mousedown', handleCapture);
+      el.removeEventListener('touchstart', handleCapture);
+    };
+  }, []);
 
   return (
     <div style={{ textAlign: 'center' }}>
       <a 
+        ref={linkRef}
         href="#" 
         payt_action="oneclick_buy" 
         data-object="LYZYJ4-4NG9J3" 
-        onClick={handleClick}
         style={{
           background: 'rgb(12, 178, 124)',
           color: 'rgb(255, 255, 255)',

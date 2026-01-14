@@ -12,12 +12,33 @@ const DownsellPage: React.FC = () => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
-    window.history.pushState(null, "", window.location.href);
-    window.onpopstate = () => {
-      alert("⚠️ ESPERE! Sua vaga de consulta individual será perdida se sair agora. Tem certeza?");
+    // Inicializa a flag
+    (window as any).isPaytRedirect = false;
+
+    // Lógica de Back Redirect aprimorada
+    const handleBackRedirect = () => {
+      // Se for um clique no checkout, não mostramos o alerta
+      if ((window as any).isPaytRedirect) {
+        return;
+      }
+
+      // Mostra o alerta conforme o print do usuário
+      alert("⚠️ ATENÇÃO! Se você sair agora, sua vaga de consulta individual será passada para o próximo homem da lista. Tem certeza?");
+      
+      // Empurra o estado novamente para "travar" o usuário na página
+      window.history.pushState(null, "", window.location.href);
     };
 
-    return () => clearInterval(timer);
+    // Empurra o primeiro estado
+    window.history.pushState(null, "", window.location.href);
+    
+    // Escuta o evento de voltar do navegador
+    window.addEventListener('popstate', handleBackRedirect);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('popstate', handleBackRedirect);
+    };
   }, []);
 
   const formatTime = (seconds: number) => {

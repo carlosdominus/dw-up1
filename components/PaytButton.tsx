@@ -2,12 +2,18 @@
 import React from 'react';
 
 const PaytButton: React.FC = () => {
+  const handleClick = () => {
+    // Sinaliza que o usuário está saindo via botão de compra
+    (window as any).isPaytRedirect = true;
+  };
+
   return (
     <div style={{ textAlign: 'center' }}>
       <a 
         href="#" 
         payt_action="oneclick_buy" 
         data-object="LYZYJ4-4NG9J3" 
+        onClick={handleClick}
         style={{
           background: 'rgb(12, 178, 124)',
           color: 'rgb(255, 255, 255)',
